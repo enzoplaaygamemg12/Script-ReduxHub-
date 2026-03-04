@@ -263,13 +263,17 @@ end
 
 local IMG = "rbxassetid://135350717440671"
 
+-- Bloqueia notifys durante construção da UI
+local uiReady = false
+local function Notify(cfg)
+    if not uiReady then return end
+    Notify(cfg)
+end
+
 -- =====================================================
 -- WINDOW
 -- =====================================================
 local Window = redzlib:MakeWindow({ Title="Redux Hub", SubTitle="by Redux Studio V1.0", SaveFolder="redux_hub_save" })
-
--- notify #1: precisa ser depois do MakeWindow (Notify depende do NotificationContainer criado dentro dele)
-redzlib:Notify({ Title=T("notify_starting_title"), Description=T("notify_starting_desc"), Image=IMG, Duration=4, Type="Info" })
 
 Window:AddMinimizeButton({
     Button = { Size=UDim2.fromOffset(45,45), Position=UDim2.fromScale(0.05,0.05), Image=IMG, BackgroundTransparency=1 },
@@ -333,17 +337,17 @@ local Main = Window:MakeTab({ Title=T("tab_main"), Icon="menu" })
 Main:AddDropdown({ Title=T("ui_farm_weapon"),  Options={"Melee","Sword","Gun","BloxFruits"}, Default="Melee", Callback=function(v) Config.FarmWeapon=v end })
 Main:AddDropdown({ Title=T("ui_farm_attack"), Options={"Normal","FastAttack","SuperFastAttack"}, Default="Normal", Callback=function(v)
     Config.FarmAttack=v
-    if v=="SuperFastAttack" then redzlib:Notify({ Title=T("warning"), Description=T("superfastattack_warn"), Image=IMG, Type="Warning", Duration=5 }) end
+    if v=="SuperFastAttack" then Notify({ Title=T("warning"), Description=T("superfastattack_warn"), Image=IMG, Type="Warning", Duration=5 }) end
 end })
 
 Main:AddSection(T("sec_farm_normal"))
 Main:AddToggle({ Title=T("ui_autofarm_level"), Default=false, Flag="AutoFarmLevel", Callback=function(v)
     Config.AutoFarmLevel=v
-    redzlib:Notify({ Title=T(v and "autofarm_level_on" or "autofarm_level_off"), Image=IMG, Type=v and "Success" or "Error", Duration=3 })
+    Notify({ Title=T(v and "autofarm_level_on" or "autofarm_level_off"), Image=IMG, Type=v and "Success" or "Error", Duration=3 })
 end })
 Main:AddToggle({ Title=T("ui_autofarm_nearest"), Default=false, Flag="AutoFarmNearest", Callback=function(v)
     Config.AutoFarmNearest=v
-    redzlib:Notify({ Title=T(v and "autofarm_nearest_on" or "autofarm_nearest_off"), Image=IMG, Type=v and "Success" or "Error", Duration=3 })
+    Notify({ Title=T(v and "autofarm_nearest_on" or "autofarm_nearest_off"), Image=IMG, Type=v and "Success" or "Error", Duration=3 })
 end })
 Main:AddDropdown({ Title=T("ui_select_island"), Options=Islands[CurrentSea], Default=Islands[CurrentSea][1], Callback=function(v) Config.FarmIsland=v end })
 
@@ -385,7 +389,7 @@ Main:AddToggle({ Title=T("ui_auto_berry"),   Default=false, Flag="AutoCollectBer
 Main:AddToggle({ Title=T("ui_auto_barista"), Default=false, Flag="AutoBarista",      Callback=function(v) Config.AutoBarista=v end })
 Main:AddDropdown({ Title=T("ui_haki_color"), Options={"White","Black","Red","Blue","Green","Yellow","Purple","Pink"}, Default="White", Callback=function(v)
     Config.HakiColor=v
-    redzlib:Notify({ Title=T("haki_color_buying",{color=v}), Image=IMG, Type="Info", Duration=3 })
+    Notify({ Title=T("haki_color_buying",{color=v}), Image=IMG, Type="Info", Duration=3 })
 end })
 Main:AddToggle({ Title=T("ui_auto_obs_haki"), Default=false, Flag="AutoFarmObsHaki", Callback=function(v) Config.AutoFarmObsHaki=v end })
 
@@ -451,14 +455,14 @@ Settings:AddToggle({ Title=T("ui_disable_notify"), Default=false, Callback=funct
 Settings:AddToggle({ Title=T("ui_no_fog"), Default=true, Callback=function(v) Config.NoFog=v Lighting.FogEnd=v and 100000 or 1000 end })
 Settings:AddToggle({ Title=T("ui_notify_error"), Default=false, Callback=function(v)
     Config.NotifyErroScript=v
-    redzlib:Notify({ Description=T(v and "notify_error_on" or "notify_error_off"), Image=IMG, Type=v and "Success" or "Error", Duration=3 })
+    Notify({ Description=T(v and "notify_error_on" or "notify_error_off"), Image=IMG, Type=v and "Success" or "Error", Duration=3 })
 end })
 Settings:AddButton({ Title=T("ui_test_notify"), Callback=function()
-    redzlib:Notify({ Title=T("test_notify_title"), Description=T("test_notify_desc"), Image=IMG, Type="Success", Duration=3 })
+    Notify({ Title=T("test_notify_title"), Description=T("test_notify_desc"), Image=IMG, Type="Success", Duration=3 })
 end })
 Settings:AddToggle({ Title=T("ui_noclip"), Default=false, Callback=function(v)
     Config.NoClip=v
-    redzlib:Notify({ Title=T(v and "noclip_on" or "noclip_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
+    Notify({ Title=T(v and "noclip_on" or "noclip_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
 end })
 
 RunService.Stepped:Connect(function()
@@ -471,22 +475,18 @@ end)
 
 -- Language inside Settings
 Settings:AddSection(T("sec_select_lang"))
-local langReady = false  -- evita notify na hora que o dropdown é criado
 Settings:AddDropdown({
     Title    = T("ui_lang_dropdown"),
     Options  = {"English","Portugues_Brazil","Portugues_Portugal","Espanol","Vietnam"},
     Default  = "English",
     Callback = function(v)
         CurrentLang = v
-        if langReady then
-            redzlib:Notify({ Title=T("language_changed"), Image=IMG, Type="Success", Duration=3 })
-        end
+        Notify({ Title=T("language_changed"), Image=IMG, Type="Success", Duration=3 })
     end
 })
 Settings:AddParagraph({ Title=T("tab_language"), Text=T("ui_lang_list") })
-task.defer(function() langReady = true end)
 
--- (Language section is inside Settings tab below)
+
 
 -- =====================================================
 -- SOON COMING PAGES
@@ -495,7 +495,7 @@ local function SoonTab(title, icon)
     local tab=Window:MakeTab({ Title=T(title), Icon=icon })
     tab:AddParagraph({ Title=T(title), Text=T("soon_coming") })
 end
-SoonTab("tab_fishing",   "fish")
+SoonTab("tab_fishing",   "anchor")
 SoonTab("tab_itemquest", "swords")
 SoonTab("tab_race",      "flag")
 SoonTab("tab_vulcano",   "flame")
@@ -511,7 +511,7 @@ Esp:AddSection(T("sec_esp_settings"))
 Esp:AddToggle({ Title=T("ui_esp_mobs"), Default=false, Callback=function(v)
     Config.ESPEnabled=v
     if not v then for _,obj in pairs(workspace:GetDescendants()) do if obj:IsA("SelectionBox") and obj.Name=="ESP_Redux" then obj:Destroy() end end end
-    redzlib:Notify({ Title=T(v and "esp_on" or "esp_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
+    Notify({ Title=T(v and "esp_on" or "esp_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
 end })
 Esp:AddToggle({ Title=T("ui_esp_teammates"), Default=false, Callback=function(v) Config.ESPTeammates=v end })
 
@@ -538,7 +538,7 @@ LocalPlayer:AddSlider({ Title=T("ui_walkspeed"), Min=16, Max=500, Default=16, Ca
 LocalPlayer:AddSlider({ Title=T("ui_jumppower"), Min=50, Max=500, Default=50, Callback=function(v) Config.JumpPower=v if Humanoid then Humanoid.JumpPower=v end end })
 LocalPlayer:AddToggle({ Title=T("ui_infinite_jump"), Default=false, Callback=function(v)
     Config.InfiniteJump=v
-    redzlib:Notify({ Title=T(v and "infinitejump_on" or "infinitejump_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
+    Notify({ Title=T(v and "infinitejump_on" or "infinitejump_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
 end })
 game:GetService("UserInputService").JumpRequest:Connect(function()
     if Config.InfiniteJump and Humanoid then Humanoid:ChangeState(Enum.HumanoidStateType.Jumping) end
@@ -554,23 +554,23 @@ LocalPlayer:AddToggle({ Title=T("ui_anti_afk"), Default=false, Callback=function
             end
         end)
     end
-    redzlib:Notify({ Title=T(v and "antiafk_on" or "antiafk_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
+    Notify({ Title=T(v and "antiafk_on" or "antiafk_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
 end })
 
 LocalPlayer:AddSection(T("sec_actions"))
 LocalPlayer:AddButton({ Title=T("ui_check_hp"), Callback=function()
-    if Humanoid then redzlib:Notify({ Title=T("hp_title"), Description=string.format("%d / %d",math.floor(Humanoid.Health),math.floor(Humanoid.MaxHealth)), Image=IMG, Type="Info", Duration=4 }) end
+    if Humanoid then Notify({ Title=T("hp_title"), Description=string.format("%d / %d",math.floor(Humanoid.Health),math.floor(Humanoid.MaxHealth)), Image=IMG, Type="Info", Duration=4 }) end
 end })
 LocalPlayer:AddButton({ Title=T("ui_reset_char"), Callback=function()
     if Humanoid then Humanoid.Health=0 end
-    redzlib:Notify({ Title=T("resetting"), Image=IMG, Type="Warning", Duration=3 })
+    Notify({ Title=T("resetting"), Image=IMG, Type="Warning", Duration=3 })
 end })
 LocalPlayer:AddButton({ Title=T("ui_copy_pos"), Callback=function()
     if HumanoidRootPart then
         local p=HumanoidRootPart.Position
         local s=string.format("%.1f,%.1f,%.1f",p.X,p.Y,p.Z)
         pcall(function() setclipboard(s) end)
-        redzlib:Notify({ Title=T("position_copied"), Description=s, Image=IMG, Type="Success", Duration=4 })
+        Notify({ Title=T("position_copied"), Description=s, Image=IMG, Type="Success", Duration=4 })
     end
 end })
 
@@ -585,11 +585,11 @@ for _,island in pairs(Islands[CurrentSea]) do
         for _,q in pairs(QuestList) do
             if q.Sea==CurrentSea and q.Name:lower():find(island:lower():sub(1,5),1,true) then
                 if HumanoidRootPart then HumanoidRootPart.CFrame=q.NPC end
-                redzlib:Notify({ Title=T("teleported"), Description=island, Image=IMG, Type="Success", Duration=3 })
+                Notify({ Title=T("teleported"), Description=island, Image=IMG, Type="Success", Duration=3 })
                 found=true break
             end
         end
-        if not found then redzlib:Notify({ Title=T("teleported"), Description=island.." - "..T("teleport_not_mapped"), Image=IMG, Type="Warning", Duration=3 }) end
+        if not found then Notify({ Title=T("teleported"), Description=island.." - "..T("teleport_not_mapped"), Image=IMG, Type="Warning", Duration=3 }) end
     end })
 end
 Teleport:AddSection(T("sec_custom_coords"))
@@ -600,9 +600,9 @@ Teleport:AddTextBox({ Title=T("ui_xyz_coords"), Desc=T("ui_xyz_desc"), Default="
         for n in v:gmatch("%-?%d+%.?%d*") do table.insert(c,tonumber(n)) end
         if #c>=3 and HumanoidRootPart then
             HumanoidRootPart.CFrame=CFrame.new(c[1],c[2],c[3])
-            redzlib:Notify({ Title=T("teleported"), Description=string.format("X:%g Y:%g Z:%g",c[1],c[2],c[3]), Image=IMG, Type="Success", Duration=4 })
+            Notify({ Title=T("teleported"), Description=string.format("X:%g Y:%g Z:%g",c[1],c[2],c[3]), Image=IMG, Type="Success", Duration=4 })
         else
-            redzlib:Notify({ Title=T("teleport_invalid"), Image=IMG, Type="Error", Duration=3 })
+            Notify({ Title=T("teleport_invalid"), Image=IMG, Type="Error", Duration=3 })
         end
     end
 })
@@ -616,14 +616,14 @@ Misc:AddToggle({ Title=T("ui_fullbright"), Default=false, Callback=function(v)
     local L=Lighting
     if v then L.Brightness=10 L.GlobalShadows=false L.Ambient=Color3.fromRGB(255,255,255) L.OutdoorAmbient=Color3.fromRGB(255,255,255)
     else L.Brightness=2 L.GlobalShadows=true L.Ambient=Color3.fromRGB(70,70,70) L.OutdoorAmbient=Color3.fromRGB(128,128,128) end
-    redzlib:Notify({ Title=T(v and "fullbright_on" or "fullbright_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
+    Notify({ Title=T(v and "fullbright_on" or "fullbright_off"), Image=IMG, Type=v and "Success" or "Info", Duration=2 })
 end })
 Misc:AddSlider({ Title=T("ui_fov"), Min=30, Max=120, Default=70, Callback=function(v) Camera.FieldOfView=v end })
 Misc:AddButton({ Title=T("ui_reset_visual"), Callback=function()
     Camera.FieldOfView=70
     Lighting.Brightness=2 Lighting.GlobalShadows=true
     Lighting.Ambient=Color3.fromRGB(70,70,70) Lighting.OutdoorAmbient=Color3.fromRGB(128,128,128)
-    redzlib:Notify({ Title=T("visual_reset"), Image=IMG, Type="Info", Duration=3 })
+    Notify({ Title=T("visual_reset"), Image=IMG, Type="Info", Duration=3 })
 end })
 Misc:AddSection(T("sec_script_info"))
 Misc:AddParagraph({ Title="Redux Hub v1.0", Text="by Redux Studio. Sea "..CurrentSea.." | PlaceId: "..PlaceId })
@@ -631,8 +631,11 @@ Misc:AddParagraph({ Title="Compatible Executors", Text=T("ui_compatible_exec") }
 Misc:AddButton({ Title=T("ui_close_ui"), Callback=function() Window:CloseBtn() end })
 
 -- =====================================================
--- notify #2: fully loaded
+-- notify #2: fully loaded  (ativa uiReady e manda as 2 notifys)
 -- =====================================================
+uiReady = true
+redzlib:Notify({ Title=T("notify_starting_title"), Description=T("notify_starting_desc"), Image=IMG, Duration=4, Type="Info" })
+task.wait(0.3)
 redzlib:Notify({
     Title       = T("notify_loaded_title"),
     Description = T("notify_loaded_desc", {sea=CurrentSea}),
