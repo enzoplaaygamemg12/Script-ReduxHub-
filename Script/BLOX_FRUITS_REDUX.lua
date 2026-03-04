@@ -864,4 +864,4 @@ Misc:AddParagraph({ Title="Compatible Executors", Text="Seliware, Velocity, Bunn
 
 Misc:AddButton({ Title="Close UI", Callback=function() Window:CloseBtn() end })
 
-redzlib:Notify({ Title="Redux Hub Is loader Sucessefully", Image = "rbxassetid://114829050051520", Type"Sucess", Duration=3})
+redzlib:Notify({ Title="Redux Hub Is loader Sucessefully", Image = "rbxassetid://114829050051520", Type="Sucess", Duration=3})
