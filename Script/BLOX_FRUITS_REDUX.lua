@@ -147,7 +147,7 @@ local Bosses = {
 -- CONFIG
 -- =====================================================
 local Config = {
-    FarmWeapon=false, FarmAttack="Normal", AutoFarmLevel=false, AutoFarmNearest=false,
+    FarmWeapon="Melee", FarmAttack="Normal", AutoFarmLevel=false, AutoFarmNearest=false,
     FarmIsland=Islands[CurrentSea][1], FlySpeed=150, AttackDelay=0.15,
     BringMob=true, BringDistance=300,
     AutoPirateRaid=false, AutoRipIndra=false, AutoTyrantSpawn=false, AutoSoulReaper=false,
@@ -469,21 +469,24 @@ RunService.Stepped:Connect(function()
     end
 end)
 
--- =====================================================
--- PAGE: LANGUAGE
--- =====================================================
-local LangTab = Window:MakeTab({ Title=T("tab_language"), Icon="globe" })
-LangTab:AddSection(T("sec_select_lang"))
-LangTab:AddDropdown({
+-- Language inside Settings
+Settings:AddSection(T("sec_select_lang"))
+local langReady = false  -- evita notify na hora que o dropdown é criado
+Settings:AddDropdown({
     Title    = T("ui_lang_dropdown"),
     Options  = {"English","Portugues_Brazil","Portugues_Portugal","Espanol","Vietnam"},
     Default  = "English",
     Callback = function(v)
-        CurrentLang=v
-        redzlib:Notify({ Title=T("language_changed"), Image=IMG, Type="Success", Duration=3 })
+        CurrentLang = v
+        if langReady then
+            redzlib:Notify({ Title=T("language_changed"), Image=IMG, Type="Success", Duration=3 })
+        end
     end
 })
-LangTab:AddParagraph({ Title=T("tab_language"), Text=T("ui_lang_list") })
+Settings:AddParagraph({ Title=T("tab_language"), Text=T("ui_lang_list") })
+task.defer(function() langReady = true end)
+
+-- (Language section is inside Settings tab below)
 
 -- =====================================================
 -- SOON COMING PAGES
