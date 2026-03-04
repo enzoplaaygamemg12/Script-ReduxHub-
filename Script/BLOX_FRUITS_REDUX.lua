@@ -32,7 +32,7 @@ end)
 -- =====================================================
 -- LANGUAGE SYSTEM
 -- =====================================================
-local LANG_URL = "https://raw.githubusercontent.com/enzoplaaygamemg12/GUI123/refs/heads/main/Language.json"
+local LANG_URL = "https://raw.githubusercontent.com/enzoplaaygamemg12/Script-ReduxHub-/refs/heads/main/Script/Language.json"
 local LangData = {}
 local CurrentLang = "English"
 
