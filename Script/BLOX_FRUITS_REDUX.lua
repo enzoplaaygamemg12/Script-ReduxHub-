@@ -264,11 +264,12 @@ end
 local IMG = "rbxassetid://135350717440671"
 
 -- =====================================================
--- WINDOW  (notify #1)
+-- WINDOW
 -- =====================================================
-redzlib:Notify({ Title=T("notify_starting_title"), Description=T("notify_starting_desc"), Image=IMG, Duration=4, Type="Info" })
-
 local Window = redzlib:MakeWindow({ Title="Redux Hub", SubTitle="by Redux Studio V1.0", SaveFolder="redux_hub_save" })
+
+-- notify #1: precisa ser depois do MakeWindow (Notify depende do NotificationContainer criado dentro dele)
+redzlib:Notify({ Title=T("notify_starting_title"), Description=T("notify_starting_desc"), Image=IMG, Duration=4, Type="Info" })
 
 Window:AddMinimizeButton({
     Button = { Size=UDim2.fromOffset(45,45), Position=UDim2.fromScale(0.05,0.05), Image=IMG, BackgroundTransparency=1 },
