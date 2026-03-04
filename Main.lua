@@ -1,4 +1,4 @@
-local url = "https://raw.githubusercontent.com/enzoplaaygamemg12/GUI123/refs/heads/main/BLOX_FRUITS_REDUX.lua"
+local url = "https://raw.githubusercontent.com/enzoplaaygamemg12/Script-ReduxHub-/refs/heads/main/Main.lua"
 
 local ok, result = pcall(function()
     return loadstring(game:HttpGet(url, true))()
