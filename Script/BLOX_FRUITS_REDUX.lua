@@ -327,11 +327,9 @@ Window:AddMinimizeButton({
         Size     = UDim2.fromOffset(45, 45),
         Position = UDim2.fromScale(0.05, 0.05),
         Image    = "rbxassetid://135350717440671",
-        BackgroundTransparency = 0,
-        BackgroundColor3 = Color3.fromRGB(15, 15, 15),
+        BackgroundTransparency = 1,
     },
-    Corner  = { CornerRadius = UDim.new(1, 0) },
-    Stroke  = { Color = Color3.fromRGB(0, 120, 255), Thickness = 2 }
+    Corner = { CornerRadius = UDim.new(1, 0) },
 })
 
 task.spawn(function()
@@ -866,4 +864,4 @@ Misc:AddParagraph({ Title="Compatible Executors", Text="Seliware, Velocity, Bunn
 
 Misc:AddButton({ Title="Close UI", Callback=function() Window:CloseBtn() end })
 
-redzlib:Notify({ Title="Redux Hub Is loader Sucessefully", Image = "rbxassetid://114829050051520", Type="Success", Duration=3})
+redzlib:Notify({ Title="Redux Hub Is loader Sucessefully", Image = "rbxassetid://114829050051520", Type"Sucess", Duration=3})
