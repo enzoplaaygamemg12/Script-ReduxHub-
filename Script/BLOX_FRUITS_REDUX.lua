@@ -4,7 +4,7 @@
 --         Compatible with: Seliware, Velocity, Ronix
 -- =====================================================
 
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/enzoplaaygamemg12/Script-ReduxHub-/refs/heads/main/Library/RedzUiLib.lua"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/enzoplaaygamemg12/GUI123/refs/heads/main/RedzUiLib.lua"))()
 
 -- =====================================================
 -- SERVICES
@@ -292,6 +292,7 @@ local function GetHitPart(model)
 end
 
 local function AttackMob(model)
+    if not Config.AutoClick then return end
     if not model or not HumanoidRootPart then return end
     local hrp = model:FindFirstChild("HumanoidRootPart") or model.PrimaryPart
     if not hrp then return end
@@ -320,12 +321,25 @@ local Window = redzlib:MakeWindow({
     SaveFolder = "redux_hub_save"
 })
 
+-- Floating orb button (toggle UI visibility)
+Window:AddMinimizeButton({
+    Button = {
+        Size     = UDim2.fromOffset(45, 45),
+        Position = UDim2.fromScale(0.05, 0.05),
+        Image    = "rbxassetid://135350717440671",
+        BackgroundTransparency = 0,
+        BackgroundColor3 = Color3.fromRGB(15, 15, 15),
+    },
+    Corner  = { CornerRadius = UDim.new(1, 0) },
+    Stroke  = { Color = Color3.fromRGB(0, 120, 255), Thickness = 2 }
+})
+
 task.spawn(function()
     task.wait(1)
     redzlib:Notify({
         Title       = "Redux Hub Loaded!",
         Description = "Sea "..CurrentSea.." detected. All systems ready.",
-        Image       = "rbxassetid://114829050051520",
+        Image       = "rbxassetid://135350717440671",
         Duration    = 5,
         Type        = "Success"
     })
@@ -340,6 +354,7 @@ Home:AddSection("Discord Server")
 
 Home:AddDiscordInvite({
     Title = "Redux Studio",
+    Logo  = "rbxassetid://135350717440671",
     Link  = "https://discord.gg/HkB97N772p"
 })
 
@@ -851,4 +866,4 @@ Misc:AddParagraph({ Title="Compatible Executors", Text="Seliware, Velocity, Bunn
 
 Misc:AddButton({ Title="Close UI", Callback=function() Window:CloseBtn() end })
 
-redzlib:Notify({ Title="Redux Hub Is loader Sucessefully", Image = "rbxassetid://114829050051520", Type="Success", Duration=3 })
+redzlib:Notify({ Title="Redux Hub Is loader Sucessefully", Image = "rbxassetid://114829050051520", Type="Success", Duration=3})
