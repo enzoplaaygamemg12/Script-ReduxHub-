@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/enzoplaaygamemg12/GUI123/refs/heads/main/BLOX_FRUITS_REDUX.lua"))()
