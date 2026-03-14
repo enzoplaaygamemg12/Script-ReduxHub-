@@ -3,7 +3,7 @@
 --         by Redux Studio V1.0 + Integrações
 -- =====================================================
 
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/enzoplaaygamemg12/GUI123/refs/heads/main/RedzUiLib.lua"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/enzoplaaygamemg12/Script-ReduxHub-/refs/heads/main/Library/RedzUiLib.lua"))()
 
 -- =====================================================
 -- SERVIÇOS
